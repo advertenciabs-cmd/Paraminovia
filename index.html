@@ -153,7 +153,6 @@
       box-shadow: 0 8px 25px rgba(251, 191, 36, 0.4);
     }
 
-    /* Reproductor flotante lateral derecho */
     .music-float-container {
       position: fixed;
       bottom: 24px;
@@ -729,7 +728,7 @@
 
   <div class="countdown-widget">
     <div class="countdown-header">
-      <span>💍</span> Nuestro Primer Aniversario (22 Ene)
+      <span>💍</span> Nuestro Aniversario (22 Ene)
     </div>
     <div class="countdown-display">
       <div class="time-block">
@@ -758,7 +757,6 @@
     ✨ Cápsulas Secretas
   </button>
 
-  <!-- Reproductor y Playlist Oculto a la Derecha -->
   <div class="music-float-container" id="musicContainer" style="display: none;">
     <button class="music-toggle-btn" onclick="toggleMusicPanel()">
       🎵 <span id="currentSongTitle">Música</span>
@@ -821,7 +819,7 @@
 
     <div class="canvas-box">
       <div class="start-container" id="startContainer">
-        <div class="welcome-text">Bienvenida a nuestro hogar, siéntete cómoda mi amor.</div>
+        <div class="welcome-text">Bienvenida a nuestro hogar virtual, siéntete cómoda mi amor.</div>
         <button class="start-btn" id="startBtn">Toca para Iniciar 🌻</button>
       </div>
       <canvas id="tree-canvas" width="480" height="520"></canvas>
@@ -844,7 +842,6 @@
     </div>
   </div>
 
-  <!-- Etiqueta de Audio Única -->
   <audio id="bg-music" loop preload="auto"></audio>
 
   <script>
@@ -853,6 +850,7 @@
 
     const playlists = {
       juntos: [
+        { title: "A Thousand Years (Principal)", file: "Thousand Years.mp3" },
         { title: "Snowman", file: "snowman.mp3" },
         { title: "Nuestra Canción Especial", file: "cancion2.mp3" }
       ],
