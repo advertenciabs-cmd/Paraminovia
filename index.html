@@ -423,7 +423,6 @@
       🎵 Música: Activada
     </button>
 
-    <!-- Elemento Audio para reproducción fluida -->
     <audio id="bg-music" loop preload="auto">
       <source src="snowman.mp3" type="audio/mpeg" />
       Tu navegador no soporta el elemento de audio.
@@ -568,6 +567,10 @@
       const cardsPanel = document.getElementById("cardsPanel");
       const audioBtn = document.getElementById("audioBtn");
       const bgMusic = document.getElementById("bg-music");
+      
+      // AJUSTE DE VOLUMEN (0.3 equivale al 30% del volumen)
+      bgMusic.volume = 0.3;
+
       let flowerTargets = [];
 
       function getHeartPoint(t) {
@@ -662,7 +665,6 @@
       startBtn.addEventListener("click", () => {
         startBtn.style.display = "none";
 
-        // Reproduce el audio inmediatamente al hacer clic
         bgMusic.play().catch((err) => {
           console.log("Error al reproducir audio:", err);
         });
