@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Un Detalle Especial ✨</title>
+  <title>Un Jardín de Amor ✨</title>
   <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <style>
@@ -32,6 +32,26 @@
       height: 100%;
       z-index: 1;
       pointer-events: none;
+    }
+
+    /* Frases dinámicas en la parte superior */
+    .top-banner {
+      position: fixed;
+      top: 15px;
+      width: 100%;
+      text-align: center;
+      z-index: 20;
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.5rem;
+      color: #fbbf24;
+      text-shadow: 0 0 10px rgba(251, 191, 36, 0.6);
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+      pointer-events: none;
+    }
+
+    .top-banner.visible {
+      opacity: 1;
     }
 
     .main-container {
@@ -66,7 +86,7 @@
       max-width: 480px;
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 18px;
       align-items: center;
       opacity: 0;
       transform: translateY(30px);
@@ -115,7 +135,7 @@
       background: rgba(17, 24, 39, 0.65);
       border: 1px solid rgba(251, 191, 36, 0.25);
       border-radius: 20px;
-      padding: 24px 12px;
+      padding: 22px 12px;
       text-align: center;
       cursor: pointer;
       backdrop-filter: blur(12px);
@@ -367,6 +387,8 @@
 
   <canvas id="bg-canvas"></canvas>
 
+  <div class="top-banner" id="topBanner">✨ Un detalle hecho con el corazón ✨</div>
+
   <div class="main-container">
     <div class="interactive-panel" id="cardsPanel">
       <div class="counter-badge" id="counterBadge">Abre las 6 cartas para desbloquear el secreto ✨ (0/6)</div>
@@ -436,11 +458,32 @@
     const whatsappNumber = "18090000000"; 
     const whatsappMessage = encodeURIComponent("¡Me encantó tu detalle de las flores amarillas! 🌻💛 Te amo mucho.");
 
-    // --- 1. FONDO DE LUCIÉRNAGAS Y PÉTALOS FLOTANTES ---
+    // --- 1. FRASES DINÁMICAS ---
+    const loveQuotes = [
+      "✨ Un detalle hecho con todo el corazón ✨",
+      "🌻 'Tú traes luz a cada uno de mis días' 🌻",
+      "💛 Las mejores historias se construyen paso a paso 💛",
+      "✨ Gracias por iluminar mi vida ✨"
+    ];
+    let quoteIndex = 0;
+    const topBanner = document.getElementById("topBanner");
+
+    function rotateQuotes() {
+      topBanner.classList.remove("visible");
+      setTimeout(() => {
+        quoteIndex = (quoteIndex + 1) % loveQuotes.length;
+        topBanner.innerText = loveQuotes[quoteIndex];
+        topBanner.classList.add("visible");
+      }, 1000);
+    }
+    setInterval(rotateQuotes, 7000);
+
+    // --- 2. FONDO DE LUCIÉRNAGAS, PÉTALOS Y ESTRELLA MÁGICA CON MOUSE ---
     const bgCanvas = document.getElementById("bg-canvas");
     const bgCtx = bgCanvas.getContext("2d");
     let particles = [];
     let petals = [];
+    let sparkTrail = [];
 
     function resizeBg() {
       bgCanvas.width = window.innerWidth;
@@ -448,6 +491,34 @@
     }
     window.addEventListener("resize", resizeBg);
     resizeBg();
+
+    // Estela de chispas al mover el mouse o tocar la pantalla
+    window.addEventListener("mousemove", (e) => {
+      for (let i = 0; i < 2; i++) {
+        sparkTrail.push({
+          x: e.clientX,
+          y: e.clientY,
+          size: Math.random() * 3 + 1,
+          speedX: (Math.random() - 0.5) * 1.5,
+          speedY: (Math.random() - 0.5) * 1.5,
+          alpha: 1
+        });
+      }
+    });
+
+    window.addEventListener("touchmove", (e) => {
+      const touch = e.touches[0];
+      for (let i = 0; i < 2; i++) {
+        sparkTrail.push({
+          x: touch.clientX,
+          y: touch.clientY,
+          size: Math.random() * 3 + 1,
+          speedX: (Math.random() - 0.5) * 1.5,
+          speedY: (Math.random() - 0.5) * 1.5,
+          alpha: 1
+        });
+      }
+    });
 
     class Particle {
       constructor() { this.reset(); }
@@ -521,11 +592,33 @@
       bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
       particles.forEach(p => { p.update(); p.draw(); });
       petals.forEach(p => { p.update(); p.draw(); });
+
+      // Dibujar estela de estrellas
+      for (let i = sparkTrail.length - 1; i >= 0; i--) {
+        const s = sparkTrail[i];
+        s.x += s.speedX;
+        s.y += s.speedY;
+        s.alpha -= 0.02;
+        if (s.alpha <= 0) {
+          sparkTrail.splice(i, 1);
+        } else {
+          bgCtx.save();
+          bgCtx.globalAlpha = s.alpha;
+          bgCtx.fillStyle = "#fef08a";
+          bgCtx.shadowBlur = 10;
+          bgCtx.shadowColor = "#fbbf24";
+          bgCtx.beginPath();
+          bgCtx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
+          bgCtx.fill();
+          bgCtx.restore();
+        }
+      }
+
       requestAnimationFrame(animateBg);
     }
     animateBg();
 
-    // --- 2. CONTENIDO Y LÓGICA DE CARTAS ---
+    // --- 3. CONTENIDO Y LÓGICA DE CARTAS ---
     const cardMessages = [
       { title: "Detalle Único", text: "Cada pequeño detalle cuenta cuando se trata de hacer sonreír a alguien especial." },
       { title: "Luz Amarilla", text: "Los girasoles siempre buscan la luz del sol; tú traes esa misma calidez a mi vida." },
@@ -603,7 +696,7 @@
 
     function closeModal() { document.getElementById("modalOverlay").classList.remove("active"); }
 
-    // --- 3. DIBUJO REALISTA DEL ÁRBOL ---
+    // --- 4. DIBUJO REALISTA DEL ÁRBOL ---
     const treeCanvas = document.getElementById("tree-canvas");
     const ctx = treeCanvas.getContext("2d");
     const startBtn = document.getElementById("startBtn");
@@ -704,6 +797,7 @@
 
     startBtn.addEventListener("click", () => {
       startBtn.style.display = "none";
+      topBanner.classList.add("visible");
       bgMusic.volume = parseFloat(volumeSlider.value);
       bgMusic.play().catch(err => console.log(err));
       audioContainer.style.display = "flex";
