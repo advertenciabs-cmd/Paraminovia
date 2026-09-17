@@ -34,7 +34,6 @@
       pointer-events: none;
     }
 
-    /* Frases dinámicas en la parte superior central */
     .top-banner {
       position: fixed;
       top: 20px;
@@ -56,7 +55,6 @@
       opacity: 1;
     }
 
-    /* Cuenta regresiva estilizada y grande */
     .countdown-widget {
       position: fixed;
       top: 20px;
@@ -124,6 +122,34 @@
       font-weight: 700;
       color: #fbbf24;
       margin-top: -8px;
+    }
+
+    .wish-btn {
+      position: fixed;
+      bottom: 24px;
+      left: 24px;
+      z-index: 30;
+      background: rgba(17, 24, 39, 0.85);
+      border: 1.5px solid rgba(251, 191, 36, 0.5);
+      padding: 12px 22px;
+      border-radius: 35px;
+      font-size: 0.92rem;
+      color: #fbbf24;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6), 0 0 15px rgba(251, 191, 36, 0.2);
+      transition: all 0.3s ease;
+      font-weight: 600;
+    }
+
+    .wish-btn:hover {
+      transform: scale(1.06);
+      border-color: #fbbf24;
+      background: rgba(251, 191, 36, 0.15);
+      box-shadow: 0 8px 25px rgba(251, 191, 36, 0.4);
     }
 
     .main-container {
@@ -307,9 +333,9 @@
     .modal-card {
       background: rgba(17, 24, 39, 0.95);
       border: 1.5px solid rgba(251, 191, 36, 0.6);
-      padding: 40px 32px;
+      padding: 35px 30px;
       border-radius: 28px;
-      max-width: 480px;
+      max-width: 460px;
       width: 90%;
       box-shadow: 0 30px 60px rgba(0, 0, 0, 0.9), 0 0 40px rgba(251, 191, 36, 0.25);
       text-align: center;
@@ -323,29 +349,69 @@
 
     .modal-card h2 {
       font-family: 'Dancing Script', cursive;
-      font-size: 3rem;
+      font-size: 2.8rem;
       color: #fbbf24;
-      margin-bottom: 16px;
+      margin-bottom: 12px;
       text-shadow: 0 0 15px rgba(251, 191, 36, 0.5);
     }
 
     .modal-card p {
-      font-size: 1rem;
-      line-height: 1.8;
+      font-size: 0.95rem;
+      line-height: 1.6;
       color: #f3f4f6;
-      white-space: pre-line;
-      margin-bottom: 24px;
+      margin-bottom: 20px;
+    }
+
+    /* Estilos para inputs dentro del modal */
+    .modal-textarea {
+      width: 100%;
+      height: 90px;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(251, 191, 36, 0.4);
+      border-radius: 12px;
+      padding: 12px;
+      color: #fff;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.9rem;
+      resize: none;
+      margin-bottom: 14px;
+      outline: none;
+    }
+
+    .modal-textarea:focus {
+      border-color: #fbbf24;
+      box-shadow: 0 0 10px rgba(251, 191, 36, 0.3);
+    }
+
+    .modal-input {
+      width: 100%;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(251, 191, 36, 0.4);
+      border-radius: 10px;
+      padding: 10px 14px;
+      color: #fff;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.9rem;
+      margin-bottom: 14px;
+      outline: none;
+      text-align: center;
+      letter-spacing: 2px;
+    }
+
+    .modal-input:focus {
+      border-color: #fbbf24;
+      box-shadow: 0 0 10px rgba(251, 191, 36, 0.3);
     }
 
     .modal-actions {
       display: flex;
       flex-direction: column;
-      gap: 12px;
+      gap: 10px;
       align-items: center;
     }
 
-    .close-btn {
-      padding: 12px 36px;
+    .action-btn {
+      padding: 12px 28px;
       background: linear-gradient(135deg, #fbbf24, #d97706);
       color: #0f172a;
       border: none;
@@ -359,19 +425,38 @@
       max-width: 250px;
     }
 
-    .close-btn:hover {
+    .action-btn:hover {
       transform: scale(1.05);
       box-shadow: 0 6px 25px rgba(251, 191, 36, 0.7);
     }
 
+    .secondary-btn {
+      background: transparent;
+      border: 1px solid rgba(251, 191, 36, 0.4);
+      color: #fbbf24;
+      padding: 10px 24px;
+      border-radius: 30px;
+      font-weight: 600;
+      font-size: 0.88rem;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      width: 100%;
+      max-width: 250px;
+    }
+
+    .secondary-btn:hover {
+      background: rgba(251, 191, 36, 0.1);
+      border-color: #fbbf24;
+    }
+
     .whatsapp-btn {
-      padding: 14px 28px;
+      padding: 12px 24px;
       background: #25d366;
       color: #ffffff;
       border: none;
       border-radius: 30px;
       font-weight: 700;
-      font-size: 0.98rem;
+      font-size: 0.92rem;
       cursor: pointer;
       box-shadow: 0 4px 20px rgba(37, 211, 102, 0.4);
       transition: all 0.25s ease;
@@ -381,12 +466,11 @@
       justify-content: center;
       gap: 8px;
       width: 100%;
-      max-width: 280px;
+      max-width: 250px;
     }
 
     .whatsapp-btn:hover {
       transform: scale(1.05);
-      box-shadow: 0 6px 25px rgba(37, 211, 102, 0.7);
       background: #20ba5a;
     }
 
@@ -456,6 +540,7 @@
       .countdown-widget { top: 12px; right: 50%; transform: translateX(50%); width: 90%; max-width: 340px; }
       .time-block { min-width: 40px; padding: 4px 6px; }
       .time-num { font-size: 1rem; }
+      .wish-btn { bottom: 16px; left: 16px; padding: 10px 16px; font-size: 0.82rem; }
     }
   </style>
 </head>
@@ -465,7 +550,6 @@
 
   <div class="top-banner" id="topBanner">✨ Un detalle hecho con el corazón ✨</div>
 
-  <!-- Contador visualmente mejorado -->
   <div class="countdown-widget">
     <div class="countdown-header">
       <span>💍</span> Nuestro Aniversario (22 Ene)
@@ -492,6 +576,10 @@
       </div>
     </div>
   </div>
+
+  <button class="wish-btn" onclick="openWishMenu()">
+    ✨ Cápsula de Deseos
+  </button>
 
   <div class="main-container">
     <div class="interactive-panel" id="cardsPanel">
@@ -538,12 +626,14 @@
   <div class="modal-overlay" id="modalOverlay">
     <div class="modal-card">
       <h2 id="modalTitle">Mensaje Especial</h2>
-      <p id="modalBody"></p>
-      <div class="modal-actions">
+      <div id="modalContentContainer">
+        <p id="modalBody"></p>
+      </div>
+      <div class="modal-actions" id="modalActions">
         <a id="whatsappBtn" class="whatsapp-btn" target="_blank" rel="noopener noreferrer">
           💚 Responder por WhatsApp
         </a>
-        <button class="close-btn" onclick="closeModal()">Cerrar</button>
+        <button class="action-btn" id="modalPrimaryBtn" onclick="closeModal()">Cerrar</button>
       </div>
     </div>
   </div>
@@ -558,11 +648,92 @@
   </audio>
 
   <script>
-    // --- EDITA TU NÚMERO DE WHATSAPP AQUÍ ---
     const whatsappNumber = "18090000000"; 
     const whatsappMessage = encodeURIComponent("¡Me encantó tu detalle de las flores amarillas! 🌻💛 Te amo mucho.");
 
-    // --- 1. LÓGICA DE LA CUENTA REGRESIVA ELEGANTE ---
+    // --- CÁPSULA DE DESEOS CON PIN ---
+    function openWishMenu() {
+      const savedWish = localStorage.getItem("user_secret_wish");
+      
+      document.getElementById("modalTitle").innerText = "✨ Cápsula de Deseos ✨";
+      
+      let htmlContent = `<p>Guarda un deseo secreto protegido con tu propio PIN para que nadie más pueda verlo.</p>`;
+      
+      if (savedWish) {
+        htmlContent += `
+          <button class="action-btn" style="margin-bottom:10px;" onclick="showWriteWishForm()">📝 Escribir / Cambiar Deseo</button>
+          <button class="secondary-btn" onclick="showReadWishForm()">🔓 Abrir mi Deseo Guardado</button>
+        `;
+      } else {
+        htmlContent += `
+          <button class="action-btn" onclick="showWriteWishForm()">📝 Escribir mi Deseo</button>
+        `;
+      }
+
+      document.getElementById("modalContentContainer").innerHTML = htmlContent;
+      document.getElementById("whatsappBtn").style.display = "none";
+      document.getElementById("modalPrimaryBtn").innerText = "Cerrar";
+      document.getElementById("modalPrimaryBtn").onclick = closeModal;
+      document.getElementById("modalOverlay").classList.add("active");
+    }
+
+    function showWriteWishForm() {
+      document.getElementById("modalTitle").innerText = "📝 Escribe tu Deseo";
+      document.getElementById("modalContentContainer").innerHTML = `
+        <p>Escribe lo que deseas con el corazón y crea un PIN de 4 dígitos:</p>
+        <textarea id="wishInput" class="modal-textarea" placeholder="Escribe tu deseo aquí..."></textarea>
+        <input type="password" id="pinInput" class="modal-input" maxlength="4" placeholder="Crea tu PIN (ej: 1234)">
+      `;
+      document.getElementById("modalPrimaryBtn").innerText = "Guardar Deseo 🔒";
+      document.getElementById("modalPrimaryBtn").onclick = saveWish;
+    }
+
+    function saveWish() {
+      const wishText = document.getElementById("wishInput").value.trim();
+      const pinText = document.getElementById("pinInput").value.trim();
+
+      if (!wishText || pinText.length < 4) {
+        alert("Por favor escribe un deseo y un PIN válido de 4 dígitos.");
+        return;
+      }
+
+      localStorage.setItem("user_secret_wish", wishText);
+      localStorage.setItem("user_secret_pin", pinText);
+
+      confetti({ particleCount: 60, spread: 70, origin: { y: 0.6 } });
+      
+      document.getElementById("modalTitle").innerText = "✨ ¡Guardado con Éxito! ✨";
+      document.getElementById("modalContentContainer").innerHTML = `<p>Tu deseo ha sido guardado de forma segura en este dispositivo. Nadie podrá verlo sin tu PIN.</p>`;
+      document.getElementById("modalPrimaryBtn").innerText = "Entendido";
+      document.getElementById("modalPrimaryBtn").onclick = closeModal;
+    }
+
+    function showReadWishForm() {
+      document.getElementById("modalTitle").innerText = "🔓 Desbloquear Deseo";
+      document.getElementById("modalContentContainer").innerHTML = `
+        <p>Ingresa tu PIN secreto para leer tu deseo:</p>
+        <input type="password" id="pinUnlockInput" class="modal-input" maxlength="4" placeholder="Ingresa tu PIN">
+      `;
+      document.getElementById("modalPrimaryBtn").innerText = "Abrir Candado 🔑";
+      document.getElementById("modalPrimaryBtn").onclick = verifyPinAndReadWish;
+    }
+
+    function verifyPinAndReadWish() {
+      const enteredPin = document.getElementById("pinUnlockInput").value.trim();
+      const savedPin = localStorage.getItem("user_secret_pin");
+
+      if (enteredPin === savedPin) {
+        const wish = localStorage.getItem("user_secret_wish");
+        document.getElementById("modalTitle").innerText = "💛 Tu Deseo Secreto 💛";
+        document.getElementById("modalContentContainer").innerHTML = `<p style="font-size: 1.1rem; color: #fef08a; font-style: italic;">"${wish}"</p>`;
+        document.getElementById("modalPrimaryBtn").innerText = "Cerrar";
+        document.getElementById("modalPrimaryBtn").onclick = closeModal;
+      } else {
+        alert("PIN incorrecto. Inténtalo de nuevo.");
+      }
+    }
+
+    // --- 1. LÓGICA DE LA CUENTA REGRESIVA ---
     function padZero(num) {
       return num < 10 ? '0' + num : num;
     }
@@ -571,7 +742,7 @@
       const now = new Date();
       let targetYear = now.getFullYear();
       
-      let anniversaryDate = new Date(targetYear, 0, 22, 0, 0, 0); // Enero
+      let anniversaryDate = new Date(targetYear, 0, 22, 0, 0, 0);
       if (now > anniversaryDate) {
         anniversaryDate = new Date(targetYear + 1, 0, 22, 0, 0, 0);
       }
@@ -611,7 +782,7 @@
     }
     setInterval(rotateQuotes, 7000);
 
-    // --- 3. FONDO DE LUCIÉRNAGAS, PÉTALOS Y ESTRELLA MÁGICA ---
+    // --- 3. FONDO DE LUCIÉRNAGAS Y PÉTALOS ---
     const bgCanvas = document.getElementById("bg-canvas");
     const bgCtx = bgCanvas.getContext("2d");
     let particles = [];
@@ -812,7 +983,7 @@
 
     function showModal(title, text, isSecret = false) {
       document.getElementById("modalTitle").innerText = title;
-      document.getElementById("modalBody").innerText = text;
+      document.getElementById("modalContentContainer").innerHTML = `<p id="modalBody">${text}</p>`;
 
       const waBtn = document.getElementById("whatsappBtn");
       if (isSecret) {
@@ -822,6 +993,8 @@
         waBtn.style.display = "none";
       }
 
+      document.getElementById("modalPrimaryBtn").innerText = "Cerrar";
+      document.getElementById("modalPrimaryBtn").onclick = closeModal;
       document.getElementById("modalOverlay").classList.add("active");
     }
 
