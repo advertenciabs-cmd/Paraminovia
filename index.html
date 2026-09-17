@@ -17,7 +17,8 @@
       background: radial-gradient(circle at 50% 30%, #111827 0%, #030712 100%);
       font-family: 'Montserrat', sans-serif;
       min-height: 100vh;
-      overflow: hidden;
+      overflow-x: hidden;
+      overflow-y: auto; /* Permite scroll vertical en teléfonos y PC si es necesario */
       color: #fff;
       display: flex;
       justify-content: center;
@@ -162,6 +163,8 @@
       width: 95%;
       max-width: 1100px;
       gap: 40px;
+      margin: auto;
+      padding: 80px 0; /* Espacio para que respire arriba y abajo */
     }
 
     .canvas-box {
@@ -323,6 +326,8 @@
       opacity: 0;
       pointer-events: none;
       transition: opacity 0.4s ease;
+      overflow-y: auto; /* Permite hacer scroll dentro del modal si el texto es largo */
+      padding: 20px;
     }
 
     .modal-overlay.active {
@@ -341,6 +346,7 @@
       text-align: center;
       transform: scale(0.85) translateY(20px);
       transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      margin: auto; /* Centrado automático con soporte para scroll */
     }
 
     .modal-overlay.active .modal-card {
@@ -532,9 +538,15 @@
     }
 
     @media (max-width: 850px) {
-      .main-container { flex-direction: column-reverse; }
+      body {
+        align-items: flex-start; /* Permite desplazamiento natural en móviles */
+      }
+      .main-container { 
+        flex-direction: column-reverse; 
+        padding: 110px 0 80px 0;
+      }
       .canvas-box { width: 340px; height: 390px; }
-      .cards-grid {grid-template-columns: repeat(2, 1fr); }
+      .cards-grid { grid-template-columns: repeat(2, 1fr); }
       .top-banner { display: none; }
       .countdown-widget { top: 12px; right: 50%; transform: translateX(50%); width: 90%; max-width: 340px; }
       .time-block { min-width: 40px; padding: 4px 6px; }
@@ -650,7 +662,6 @@
     const whatsappNumber = "18090000000"; 
     const whatsappMessage = encodeURIComponent("¡Me encantó tu detalle de las flores amarillas! 🌻💛 Te amo mucho.");
 
-    // --- CÁPSULAS GEMELAS (TÚ Y ELLA) ---
     function openCapsulesMenu() {
       document.getElementById("modalTitle").innerText = "✨ Cápsulas Secretas ✨";
       
@@ -754,7 +765,6 @@
       }
     }
 
-    // --- 1. LÓGICA DE LA CUENTA REGRESIVA ---
     function padZero(num) {
       return num < 10 ? '0' + num : num;
     }
@@ -783,7 +793,6 @@
     setInterval(updateCountdown, 1000);
     updateCountdown();
 
-    // --- 2. FRASES DINÁMICAS ---
     const loveQuotes = [
       "✨ Un detalle hecho con todo el corazón ✨",
       "🌻 'Tú traes luz a cada uno de mis días' 🌻",
@@ -803,7 +812,6 @@
     }
     setInterval(rotateQuotes, 7000);
 
-    // --- 3. FONDO DE LUCIÉRNAGAS Y PÉTALOS ---
     const bgCanvas = document.getElementById("bg-canvas");
     const bgCtx = bgCanvas.getContext("2d");
     let particles = [];
@@ -941,7 +949,6 @@
     }
     animateBg();
 
-    // --- 4. CONTENIDO Y LÓGICA DE CARTAS ---
     const cardMessages = [
       { title: "Detalle Único", text: "Cada pequeño detalle cuenta cuando se trata de hacer sonreír a alguien especial." },
       { title: "Luz Amarilla", text: "Los girasoles siempre buscan la luz del sol; tú traes esa misma calidez a mi vida." },
@@ -1021,7 +1028,6 @@
 
     function closeModal() { document.getElementById("modalOverlay").classList.remove("active"); }
 
-    // --- 5. DIBUJO REALISTA DEL ÁRBOL ---
     const treeCanvas = document.getElementById("tree-canvas");
     const ctx = treeCanvas.getContext("2d");
     const startBtn = document.getElementById("startBtn");
