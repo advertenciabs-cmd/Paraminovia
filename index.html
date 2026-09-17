@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Un Detalle Especial ✨</title>
   <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <!-- Librería externa para fuegos artificiales y confeti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
   <style>
     * {
       box-sizing: border-box;
@@ -91,6 +93,16 @@
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.1);
       text-align: center;
       letter-spacing: 0.5px;
+      transition: all 0.5s ease;
+    }
+
+    .counter-badge.unlocked {
+      background: rgba(251, 191, 36, 0.25);
+      border-color: #fbbf24;
+      color: #ffffff;
+      font-weight: 700;
+      box-shadow: 0 0 25px rgba(251, 191, 36, 0.6);
+      transform: scale(1.05);
     }
 
     .cards-grid {
@@ -98,11 +110,6 @@
       grid-template-columns: repeat(3, 1fr);
       gap: 16px;
       width: 100%;
-    }
-
-    /* Animación Flip 3D para las cartas */
-    .card-wrapper {
-      perspective: 1000px;
     }
 
     .card-item {
@@ -184,7 +191,6 @@
       100% { background-position: 0% 50%; }
     }
 
-    /* Modal estilo elegante */
     .modal-overlay {
       position: fixed;
       top: 0;
@@ -387,7 +393,7 @@
   </audio>
 
   <script>
-    // --- 1. FONDO DE LUCIÉRNAGAS MEJORADO ---
+    // --- 1. FONDO DE LUCIÉRNAGAS ---
     const bgCanvas = document.getElementById("bg-canvas");
     const bgCtx = bgCanvas.getContext("2d");
     let particles = [];
@@ -408,7 +414,6 @@
         this.speedX = (Math.random() - 0.5) * 0.4;
         this.speedY = (Math.random() - 0.5) * 0.4;
         this.alpha = Math.random() * 0.7 + 0.2;
-        this.pulse = Math.random() * 0.03 + 0.01;
       }
       update() {
         this.x += this.speedX;
@@ -437,7 +442,7 @@
     }
     animateBg();
 
-    // --- 2. CONTENIDO CARTAS ---
+    // --- 2. CONTENIDO Y LÓGICA DE CARTAS ---
     const cardMessages = [
       { title: "Detalle Único", text: "Cada pequeño detalle cuenta cuando se trata de hacer sonreír a alguien especial." },
       { title: "Luz Amarilla", text: "Los girasoles siempre buscan la luz del sol; tú traes esa misma calidez a mi vida." },
@@ -467,12 +472,51 @@
       showModal(cardMessages[index].title, cardMessages[index].text);
     }
 
+    function launchExplosion() {
+      // Ráfagas continuas de confeti y estrellas
+      const duration = 2.5 * 1000;
+      const animationEnd = Date.now() + duration;
+      const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 1000 };
+
+      function randomInRange(min, max) {
+        return Math.random() * (max - min) + min;
+      }
+
+      const interval = setInterval(function() {
+        const timeLeft = animationEnd - Date.now();
+
+        if (timeLeft <= 0) {
+          return clearInterval(interval);
+        }
+
+        const particleCount = 50 * (timeLeft / duration);
+
+        confetti({
+          ...defaults,
+          particleCount,
+          origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
+          colors: ['#fbbf24', '#f59e0b', '#fef08a', '#ffffff']
+        });
+        confetti({
+          ...defaults,
+          particleCount,
+          origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
+          colors: ['#fbbf24', '#f59e0b', '#fef08a', '#ffffff']
+        });
+      }, 250);
+    }
+
     function updateCounter() {
       const badge = document.getElementById("counterBadge");
       badge.innerText = `Abre las 6 cartas para desbloquear el secreto ✨ (${openedCount}/6)`;
+      
       if (openedCount === 6) {
-        badge.innerText = "¡Has desbloqueado el secreto final! ✨";
+        badge.innerText = "¡🎉 Desbloqueaste el Secreto Final! 🎉";
+        badge.classList.add("unlocked");
         document.getElementById("secretBtn").classList.add("visible");
+        
+        // ¡Disparar la explosión de fuegos artificiales!
+        launchExplosion();
       }
     }
 
@@ -529,7 +573,6 @@
     }
 
     function drawRealisticTrunk(callback) {
-      // Tronco marrón realista
       let grad = ctx.createLinearGradient(200, 500, 280, 200);
       grad.addColorStop(0, '#27170a');
       grad.addColorStop(0.5, '#422510');
@@ -544,7 +587,6 @@
       ctx.closePath();
       ctx.fill();
 
-      // Ramas
       const branches = [
         { sx: 230, sy: 340, ex: 140, ey: 220, w: 8 },
         { sx: 245, sy: 310, ex: 330, ey: 210, w: 8 },
@@ -585,7 +627,6 @@
       step();
     }
 
-    // --- INICIAR ---
     startBtn.addEventListener("click", () => {
       startBtn.style.display = "none";
       bgMusic.volume = parseFloat(volumeSlider.value);
@@ -609,7 +650,6 @@
       drawRealisticTrunk(() => growFlowers());
     });
 
-    // Control de audio
     let isPlaying = true;
     audioBtn.addEventListener("click", () => {
       if (isPlaying) {
