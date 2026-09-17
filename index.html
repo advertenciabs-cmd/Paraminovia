@@ -153,6 +153,169 @@
       box-shadow: 0 8px 25px rgba(251, 191, 36, 0.4);
     }
 
+    /* Reproductor flotante lateral derecho */
+    .music-float-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 40;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+
+    .music-toggle-btn {
+      background: rgba(17, 24, 39, 0.9);
+      border: 1.5px solid rgba(251, 191, 36, 0.6);
+      color: #fbbf24;
+      padding: 12px 18px;
+      border-radius: 35px;
+      cursor: pointer;
+      font-size: 0.92rem;
+      font-weight: 600;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6), 0 0 15px rgba(251, 191, 36, 0.2);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .music-toggle-btn:hover {
+      transform: scale(1.05);
+      border-color: #fbbf24;
+      background: rgba(251, 191, 36, 0.2);
+    }
+
+    .music-panel {
+      position: absolute;
+      bottom: 60px;
+      right: 0;
+      background: rgba(17, 24, 39, 0.95);
+      border: 1.5px solid rgba(251, 191, 36, 0.5);
+      border-radius: 20px;
+      padding: 16px;
+      width: 280px;
+      backdrop-filter: blur(16px);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8), 0 0 20px rgba(251, 191, 36, 0.2);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      opacity: 0;
+      transform: translateY(15px) scale(0.95);
+      pointer-events: none;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .music-panel.active {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+    }
+
+    .music-controls-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .audio-control-btn {
+      background: rgba(251, 191, 36, 0.15);
+      border: 1px solid rgba(251, 191, 36, 0.4);
+      color: #fbbf24;
+      padding: 6px 12px;
+      border-radius: 12px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .audio-control-btn:hover {
+      background: rgba(251, 191, 36, 0.3);
+    }
+
+    .volume-slider {
+      width: 90px;
+      accent-color: #fbbf24;
+      cursor: pointer;
+    }
+
+    .playlist-toggle-link {
+      background: transparent;
+      border: none;
+      color: #fef08a;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: center;
+      text-decoration: underline;
+      padding: 4px;
+    }
+
+    .playlist-section {
+      border-top: 1px solid rgba(251, 191, 36, 0.2);
+      padding-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .playlist-tabs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 4px;
+    }
+
+    .tab-btn {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(251, 191, 36, 0.3);
+      color: #d1d5db;
+      font-size: 0.68rem;
+      padding: 5px 2px;
+      border-radius: 8px;
+      cursor: pointer;
+      text-align: center;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .tab-btn.active {
+      background: rgba(251, 191, 36, 0.25);
+      border-color: #fbbf24;
+      color: #fef08a;
+    }
+
+    .song-list {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      max-height: 120px;
+      overflow-y: auto;
+    }
+
+    .song-item {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(251, 191, 36, 0.15);
+      padding: 6px 10px;
+      border-radius: 8px;
+      font-size: 0.78rem;
+      cursor: pointer;
+      color: #f3f4f6;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.2s;
+    }
+
+    .song-item:hover, .song-item.playing {
+      background: rgba(251, 191, 36, 0.2);
+      border-color: #fbbf24;
+      color: #fef08a;
+      font-weight: 600;
+    }
+
     .main-container {
       position: relative;
       z-index: 10;
@@ -366,6 +529,7 @@
       line-height: 1.6;
       color: #f3f4f6;
       margin-bottom: 20px;
+      white-space: pre-line;
     }
 
     .modal-textarea {
@@ -503,40 +667,6 @@
       box-shadow: 0 0 60px rgba(251, 191, 36, 0.95);
     }
 
-    .audio-container {
-      position: fixed;
-      bottom: 24px;
-      right: 24px;
-      z-index: 30;
-      background: rgba(17, 24, 39, 0.85);
-      border: 1px solid rgba(251, 191, 36, 0.4);
-      padding: 10px 18px;
-      border-radius: 35px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      backdrop-filter: blur(12px);
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.6);
-    }
-
-    .audio-control {
-      background: transparent;
-      border: none;
-      font-size: 0.88rem;
-      color: #fbbf24;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      font-weight: 600;
-    }
-
-    .volume-slider {
-      width: 85px;
-      accent-color: #fbbf24;
-      cursor: pointer;
-    }
-
     @media (max-width: 850px) {
       body {
         align-items: flex-start;
@@ -591,6 +721,31 @@
   <button class="wish-btn" onclick="openCapsulesMenu()">
     ✨ Cápsulas Secretas
   </button>
+
+  <!-- Reproductor y Playlist Oculto a la Derecha -->
+  <div class="music-float-container" id="musicContainer" style="display: none;">
+    <button class="music-toggle-btn" onclick="toggleMusicPanel()">
+      🎵 <span id="currentSongTitle">Música</span>
+    </button>
+
+    <div class="music-panel" id="musicPanel">
+      <div class="music-controls-row">
+        <button class="audio-control-btn" id="audioBtn" onclick="togglePlayPause()">⏸️ Pausar</button>
+        <input type="range" id="volumeSlider" class="volume-slider" min="0" max="1" step="0.05" value="0.10">
+      </div>
+
+      <div class="playlist-section">
+        <div class="playlist-tabs">
+          <button class="tab-btn active" onclick="switchTab('juntos')">Juntos</button>
+          <button class="tab-btn" onclick="switchTab('tuyas')">Tus 🌻</button>
+          <button class="tab-btn" onclick="switchTab('mias')">Mías 💛</button>
+        </div>
+        <div class="song-list" id="songListContainer">
+          <!-- Las canciones se cargan dinámicamente -->
+        </div>
+      </div>
+    </div>
+  </div>
 
   <div class="main-container">
     <div class="interactive-panel" id="cardsPanel">
@@ -649,22 +804,92 @@
     </div>
   </div>
 
-  <div class="audio-container" id="audioContainer" style="display: none;">
-    <button class="audio-control" id="audioBtn">🎵 Música: Activada</button>
-    <input type="range" id="volumeSlider" class="volume-slider" min="0" max="1" step="0.05" value="0.10">
-  </div>
-
-  <audio id="bg-music" loop preload="auto">
-    <source src="snowman.mp3" type="audio/mpeg">
-  </audio>
+  <!-- Etiqueta de Audio Única -->
+  <audio id="bg-music" loop preload="auto"></audio>
 
   <script>
     const whatsappNumber = "18090000000"; 
     const whatsappMessage = encodeURIComponent("¡Me encantó tu detalle de las flores amarillas! 🌻💛 Te amo mucho.");
 
+    // Playlist de canciones (puedes cambiar los nombres y archivos .mp3 en tu repositorio)
+    const playlists = {
+      juntos: [
+        { title: "Snowman (Principal)", file: "snowman.mp3" },
+        { title: "Nuestra Canción Especial", file: "cancion2.mp3" }
+      ],
+      tuyas: [
+        { title: "Tu Favorita 1", file: "tucancion1.mp3" },
+        { title: "Tu Favorita 2", file: "tucancion2.mp3" }
+      ],
+      mias: [
+        { title: "Mi Favorita 1", file: "micancion1.mp3" },
+        { title: "Mi Favorita 2", file: "micancion2.mp3" }
+      ]
+    };
+
+    let currentTab = 'juntos';
+    let currentSongIndex = 0;
+    const bgMusic = document.getElementById("bg-music");
+
+    function loadPlaylist(tab) {
+      currentTab = tab;
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.classList.add('active');
+
+      const container = document.getElementById("songListContainer");
+      container.innerHTML = "";
+
+      playlists[tab].forEach((song, idx) => {
+        const item = document.createElement("div");
+        item.className = `song-item ${song.file === bgMusic.src.split('/').pop() ? 'playing' : ''}`;
+        item.innerHTML = `<span>🎵 ${song.title}</span>`;
+        item.onclick = () => playSong(tab, idx);
+        container.appendChild(item);
+      });
+    }
+
+    function switchTab(tab) {
+      loadPlaylist(tab);
+    }
+
+    function playSong(tab, index) {
+      currentTab = tab;
+      currentSongIndex = index;
+      const song = playlists[tab][index];
+      
+      bgMusic.src = song.file;
+      bgMusic.volume = parseFloat(document.getElementById("volumeSlider").value);
+      bgMusic.play().catch(e => console.log(e));
+
+      document.getElementById("currentSongTitle").innerText = song.title;
+      document.getElementById("audioBtn").innerText = "⏸️ Pausar";
+      isPlaying = true;
+      loadPlaylist(tab);
+    }
+
+    function toggleMusicPanel() {
+      document.getElementById("musicPanel").classList.toggle("active");
+    }
+
+    let isPlaying = true;
+    function togglePlayPause() {
+      if (isPlaying) {
+        bgMusic.pause();
+        document.getElementById("audioBtn").innerText = "▶️ Reproducir";
+        isPlaying = false;
+      } else {
+        bgMusic.play();
+        document.getElementById("audioBtn").innerText = "⏸️ Pausar";
+        isPlaying = true;
+      }
+    }
+
+    document.getElementById("volumeSlider").addEventListener("input", (e) => {
+      bgMusic.volume = parseFloat(e.target.value);
+    });
+
     function openCapsulesMenu() {
       document.getElementById("modalTitle").innerText = "✨ Cápsulas Secretas ✨";
-      
       const hasMyWish = localStorage.getItem("my_wish");
       const hasHerWish = localStorage.getItem("her_wish");
 
@@ -772,12 +997,10 @@
     function updateCountdown() {
       const now = new Date();
       let targetYear = now.getFullYear();
-      
       let anniversaryDate = new Date(targetYear, 0, 22, 0, 0, 0);
       if (now > anniversaryDate) {
         anniversaryDate = new Date(targetYear + 1, 0, 22, 0, 0, 0);
       }
-
       const diff = anniversaryDate - now;
 
       const days = Math.floor(diff / (1000 * 60 * 60 * 24));
@@ -838,20 +1061,6 @@
       }
     });
 
-    window.addEventListener("touchmove", (e) => {
-      const touch = e.touches[0];
-      for (let i = 0; i < 2; i++) {
-        sparkTrail.push({
-          x: touch.clientX,
-          y: touch.clientY,
-          size: Math.random() * 3 + 1,
-          speedX: (Math.random() - 0.5) * 1.5,
-          speedY: (Math.random() - 0.5) * 1.5,
-          alpha: 1
-        });
-      }
-    });
-
     class Particle {
       constructor() { this.reset(); }
       reset() {
@@ -904,12 +1113,10 @@
         bgCtx.translate(this.x, this.y);
         bgCtx.rotate(this.angle);
         bgCtx.globalAlpha = this.alpha;
-        
         let grad = bgCtx.createLinearGradient(0, 0, 0, this.size * 2);
         grad.addColorStop(0, "#fbbf24");
         grad.addColorStop(1, "#f59e0b");
         bgCtx.fillStyle = grad;
-
         bgCtx.beginPath();
         bgCtx.ellipse(0, 0, this.size / 2, this.size, 0, 0, Math.PI * 2);
         bgCtx.fill();
@@ -924,27 +1131,6 @@
       bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
       particles.forEach(p => { p.update(); p.draw(); });
       petals.forEach(p => { p.update(); p.draw(); });
-
-      for (let i = sparkTrail.length - 1; i >= 0; i--) {
-        const s = sparkTrail[i];
-        s.x += s.speedX;
-        s.y += s.speedY;
-        s.alpha -= 0.02;
-        if (s.alpha <= 0) {
-          sparkTrail.splice(i, 1);
-        } else {
-          bgCtx.save();
-          bgCtx.globalAlpha = s.alpha;
-          bgCtx.fillStyle = "#fef08a";
-          bgCtx.shadowBlur = 10;
-          bgCtx.shadowColor = "#fbbf24";
-          bgCtx.beginPath();
-          bgCtx.arc(s.x, s.y, s.size, 0, Math.PI * 2);
-          bgCtx.fill();
-          bgCtx.restore();
-        }
-      }
-
       requestAnimationFrame(animateBg);
     }
     animateBg();
@@ -982,13 +1168,11 @@
       const duration = 2.5 * 1000;
       const animationEnd = Date.now() + duration;
       const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 1000 };
-
       function randomInRange(min, max) { return Math.random() * (max - min) + min; }
 
       const interval = setInterval(function() {
         const timeLeft = animationEnd - Date.now();
         if (timeLeft <= 0) return clearInterval(interval);
-
         const particleCount = 50 * (timeLeft / duration);
         confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 }, colors: ['#fbbf24', '#f59e0b', '#fef08a', '#ffffff'] });
         confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }, colors: ['#fbbf24', '#f59e0b', '#fef08a', '#ffffff'] });
@@ -998,7 +1182,6 @@
     function updateCounter() {
       const badge = document.getElementById("counterBadge");
       badge.innerText = `Abre las 6 cartas para desbloquear el secreto ✨ (${openedCount}/6)`;
-      
       if (openedCount === 6) {
         badge.innerText = "¡🎉 Desbloqueaste el Secreto Final! 🎉";
         badge.classList.add("unlocked");
@@ -1032,13 +1215,7 @@
     const ctx = treeCanvas.getContext("2d");
     const startBtn = document.getElementById("startBtn");
     const cardsPanel = document.getElementById("cardsPanel");
-    const audioContainer = document.getElementById("audioContainer");
-    const audioBtn = document.getElementById("audioBtn");
-    const volumeSlider = document.getElementById("volumeSlider");
-    const bgMusic = document.getElementById("bg-music");
-
-    bgMusic.volume = 0.10;
-    let flowerTargets = [];
+    const musicContainer = document.getElementById("musicContainer");
 
     function getHeartPoint(t) {
       const x = 16 * Math.pow(Math.sin(t), 3);
@@ -1072,7 +1249,6 @@
     }
 
     function drawLandscape() {
-      // 1. Suelo / Colina con textura de pasto
       let groundGrad = ctx.createLinearGradient(240, 460, 240, 520);
       groundGrad.addColorStop(0, '#14532d');
       groundGrad.addColorStop(0.4, '#166534');
@@ -1083,7 +1259,6 @@
       ctx.ellipse(240, 510, 230, 45, 0, 0, Math.PI * 2);
       ctx.fill();
 
-      // 2. Briznas de pasto detalladas en la base
       ctx.strokeStyle = '#4ade80';
       ctx.lineWidth = 1.5;
       for (let x = 60; x < 420; x += 8) {
@@ -1095,7 +1270,6 @@
         ctx.stroke();
       }
 
-      // 3. Pequeños girasoles silvestres en el suelo a los lados del tronco
       const groundFlowers = [
         { x: 140, y: 495, size: 10 },
         { x: 175, y: 505, size: 8 },
@@ -1106,23 +1280,18 @@
       ];
 
       groundFlowers.forEach(gf => {
-        // Tallo corto
         ctx.strokeStyle = '#15803d';
         ctx.lineWidth = 2;
         ctx.beginPath();
         ctx.moveTo(gf.x, gf.y + gf.size);
         ctx.lineTo(gf.x, gf.y);
         ctx.stroke();
-
-        // Girasol pequeño
         drawSunflower(gf.x, gf.y, gf.size);
       });
     }
 
     function drawRealisticTrunk(callback) {
-      // Dibujar primero el paisaje de fondo (pasto y flores de base)
       drawLandscape();
-
       let grad = ctx.createLinearGradient(200, 500, 280, 200);
       grad.addColorStop(0, '#27170a');
       grad.addColorStop(0.5, '#422510');
@@ -1162,6 +1331,7 @@
       drawNextBranch();
     }
 
+    let flowerTargets = [];
     function growFlowers() {
       let i = 0;
       function step() {
@@ -1180,9 +1350,10 @@
     startBtn.addEventListener("click", () => {
       startBtn.style.display = "none";
       topBanner.classList.add("visible");
-      bgMusic.volume = parseFloat(volumeSlider.value);
-      bgMusic.play().catch(err => console.log(err));
-      audioContainer.style.display = "flex";
+      musicContainer.style.display = "flex";
+
+      // Iniciar reproduciendo la primera canción de la lista juntos
+      playSong('juntos', 0);
 
       const centerX = 240;
       const centerY = 190;
@@ -1200,23 +1371,6 @@
 
       flowerTargets.sort((a, b) => b.y - a.y);
       drawRealisticTrunk(() => growFlowers());
-    });
-
-    let isPlaying = true;
-    audioBtn.addEventListener("click", () => {
-      if (isPlaying) {
-        bgMusic.pause();
-        audioBtn.innerText = "🔇 Música: Pausada";
-        isPlaying = false;
-      } else {
-        bgMusic.play();
-        audioBtn.innerText = "🎵 Música: Activada";
-        isPlaying = true;
-      }
-    });
-
-    volumeSlider.addEventListener("input", (e) => {
-      bgMusic.volume = parseFloat(e.target.value);
     });
   </script>
 </body>
