@@ -242,18 +242,6 @@
       cursor: pointer;
     }
 
-    .playlist-toggle-link {
-      background: transparent;
-      border: none;
-      color: #fef08a;
-      font-size: 0.82rem;
-      font-weight: 600;
-      cursor: pointer;
-      text-align: center;
-      text-decoration: underline;
-      padding: 4px;
-    }
-
     .playlist-section {
       border-top: 1px solid rgba(251, 191, 36, 0.2);
       padding-top: 10px;
@@ -499,11 +487,12 @@
     }
 
     .modal-card {
+      position: relative;
       background: rgba(17, 24, 39, 0.95);
       border: 1.5px solid rgba(251, 191, 36, 0.6);
       padding: 35px 30px;
       border-radius: 28px;
-      max-width: 460px;
+      max-width: 480px;
       width: 90%;
       box-shadow: 0 30px 60px rgba(0, 0, 0, 0.9), 0 0 40px rgba(251, 191, 36, 0.25);
       text-align: center;
@@ -516,16 +505,34 @@
       transform: scale(1) translateY(0);
     }
 
+    .modal-close-x {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      background: none;
+      border: none;
+      color: #fbbf24;
+      font-size: 1.5rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.2s ease, color 0.2s ease;
+    }
+
+    .modal-close-x:hover {
+      transform: scale(1.2);
+      color: #fef08a;
+    }
+
     .modal-card h2 {
       font-family: 'Dancing Script', cursive;
-      font-size: 2.8rem;
+      font-size: 2.5rem;
       color: #fbbf24;
       margin-bottom: 12px;
       text-shadow: 0 0 15px rgba(251, 191, 36, 0.5);
     }
 
     .modal-card p {
-      font-size: 0.95rem;
+      font-size: 0.92rem;
       line-height: 1.6;
       color: #f3f4f6;
       margin-bottom: 20px;
@@ -591,7 +598,7 @@
       box-shadow: 0 4px 20px rgba(251, 191, 36, 0.4);
       transition: all 0.25s ease;
       width: 100%;
-      max-width: 250px;
+      max-width: 280px;
     }
 
     .action-btn:hover {
@@ -610,7 +617,7 @@
       cursor: pointer;
       transition: all 0.25s ease;
       width: 100%;
-      max-width: 250px;
+      max-width: 280px;
     }
 
     .secondary-btn:hover {
@@ -635,7 +642,7 @@
       justify-content: center;
       gap: 8px;
       width: 100%;
-      max-width: 250px;
+      max-width: 280px;
     }
 
     .whatsapp-btn:hover {
@@ -643,11 +650,29 @@
       background: #20ba5a;
     }
 
-    .start-btn {
+    .start-container {
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
+      display: flex;
+      align-items: center;
+      gap: 24px;
+      z-index: 20;
+      width: max-content;
+    }
+
+    .welcome-text {
+      font-family: 'Dancing Script', cursive;
+      font-size: 1.8rem;
+      color: #fbbf24;
+      text-shadow: 0 0 15px rgba(251, 191, 36, 0.6);
+      text-align: right;
+      max-width: 300px;
+      line-height: 1.2;
+    }
+
+    .start-btn {
       padding: 20px 42px;
       background: linear-gradient(135deg, #fbbf24, #d97706);
       color: #0f172a;
@@ -659,11 +684,11 @@
       cursor: pointer;
       box-shadow: 0 0 40px rgba(251, 191, 36, 0.7);
       transition: all 0.3s ease;
-      z-index: 20;
+      flex-shrink: 0;
     }
 
     .start-btn:hover {
-      transform: translate(-50%, -50%) scale(1.08);
+      transform: scale(1.08);
       box-shadow: 0 0 60px rgba(251, 191, 36, 0.95);
     }
 
@@ -682,6 +707,17 @@
       .time-block { min-width: 40px; padding: 4px 6px; }
       .time-num { font-size: 1rem; }
       .wish-btn { bottom: 16px; left: 16px; padding: 10px 16px; font-size: 0.82rem; }
+      .start-container {
+        flex-direction: column;
+        text-align: center;
+        gap: 16px;
+        width: 90%;
+      }
+      .welcome-text {
+        text-align: center;
+        font-size: 1.5rem;
+        max-width: 100%;
+      }
     }
   </style>
 </head>
@@ -784,13 +820,17 @@
     </div>
 
     <div class="canvas-box">
-      <button class="start-btn" id="startBtn">Toca para Iniciar 🌻</button>
+      <div class="start-container" id="startContainer">
+        <div class="welcome-text">Bienvenida a nuestro hogar virtual, siéntete cómoda mi amor.</div>
+        <button class="start-btn" id="startBtn">Toca para Iniciar 🌻</button>
+      </div>
       <canvas id="tree-canvas" width="480" height="520"></canvas>
     </div>
   </div>
 
   <div class="modal-overlay" id="modalOverlay">
     <div class="modal-card">
+      <button class="modal-close-x" onclick="closeModal()">×</button>
       <h2 id="modalTitle">Mensaje Especial</h2>
       <div id="modalContentContainer">
         <p id="modalBody"></p>
@@ -811,10 +851,9 @@
     const whatsappNumber = "18090000000"; 
     const whatsappMessage = encodeURIComponent("¡Me encantó tu detalle de las flores amarillas! 🌻💛 Te amo mucho.");
 
-    // Playlist de canciones (puedes cambiar los nombres y archivos .mp3 en tu repositorio)
     const playlists = {
       juntos: [
-        { title: "Snowman", file: "snowman.mp3" },
+        { title: "Snowman (Principal)", file: "snowman.mp3" },
         { title: "Nuestra Canción Especial", file: "cancion2.mp3" }
       ],
       tuyas: [
@@ -890,16 +929,16 @@
 
     function openCapsulesMenu() {
       document.getElementById("modalTitle").innerText = "✨ Cápsulas Secretas ✨";
-      const hasMyWish = localStorage.getItem("my_wish");
-      const hasHerWish = localStorage.getItem("her_wish");
+      const hasEstherlyn = localStorage.getItem("wish_estherlyn");
+      const hasEmmanuel = localStorage.getItem("wish_emmanuel");
 
-      let myStatus = hasMyWish ? "🔒 (Guardado)" : "📝 (Vacío)";
-      let herStatus = hasHerWish ? "🔒 (Guardado)" : "📝 (Vacío)";
+      let estherlynStatus = hasEstherlyn ? "🔒 (Guardado)" : "📝 (Vacío)";
+      let emmanuelStatus = hasEmmanuel ? "🔒 (Guardado)" : "📝 (Vacío)";
 
       let htmlContent = `
         <p>Elijan su espacio secreto. Cada cápsula está protegida por un PIN individual.</p>
-        <button class="action-btn" style="margin-bottom:10px;" onclick="openCapsuleOwner('my')">👤 Tu Cápsula ${myStatus}</button>
-        <button class="secondary-btn" onclick="openCapsuleOwner('her')">💛 Cápsula de Ella ${herStatus}</button>
+        <button class="action-btn" style="margin-bottom:10px; font-size: 0.82rem;" onclick="openCapsuleOwner('estherlyn')">🌻 Estherlyn Iliandra Mooris Arias ${estherlynStatus}</button>
+        <button class="secondary-btn" style="font-size: 0.82rem;" onclick="openCapsuleOwner('emmanuel')">💛 Emmanuel Rodriguez De La Cruz ${emmanuelStatus}</button>
       `;
 
       document.getElementById("modalContentContainer").innerHTML = htmlContent;
@@ -910,15 +949,15 @@
     }
 
     function openCapsuleOwner(owner) {
-      const wishKey = owner === 'my' ? 'my_wish' : 'her_wish';
-      const nameLabel = owner === 'my' ? 'Tu Cápsula' : 'Cápsula de Ella';
-      const hasWish = localStorage.getItem(wishKey);
+      const wishKey = owner === 'estherlyn' ? 'wish_estherlyn' : 'wish_emmanuel';
+      const nameLabel = owner === 'estherlyn' ? 'Estherlyn Iliandra' : 'Emmanuel Rodriguez';
 
-      document.getElementById("modalTitle").innerText = `✨ ${nameLabel} ✨`;
+      document.getElementById("modalTitle").innerText = `✨ Cápsula de ${nameLabel} ✨`;
+      const hasWish = localStorage.getItem(wishKey);
 
       if (hasWish) {
         document.getElementById("modalContentContainer").innerHTML = `
-          <p>Esta cápsula ya tiene un secreto guardado. Necesitas ingresar el PIN correspondiente para abrirla o puedes modificarla.</p>
+          <p>Esta cápsula ya tiene un secreto guardado. Ingresa el PIN correspondiente para abrirla o cambiarla.</p>
           <button class="action-btn" style="margin-bottom:10px;" onclick="promptUnlockWish('${owner}')">🔓 Abrir con PIN</button>
           <button class="secondary-btn" onclick="promptWriteWish('${owner}')">✏️ Cambiar Deseo</button>
         `;
@@ -933,10 +972,10 @@
     }
 
     function promptWriteWish(owner) {
-      const nameLabel = owner === 'my' ? 'Tu Deseo' : 'Deseo de Ella';
-      document.getElementById("modalTitle").innerText = `✍️ Escribir ${nameLabel}`;
+      const nameLabel = owner === 'estherlyn' ? 'Estherlyn Iliandra' : 'Emmanuel Rodriguez';
+      document.getElementById("modalTitle").innerText = `✍️ Deseo de ${nameLabel}`;
       document.getElementById("modalContentContainer").innerHTML = `
-        <p>Escribe el mensaje secreto y crea un PIN de 4 dígitos:</p>
+        <p>Escribe tu mensaje secreto y crea un PIN de 4 dígitos:</p>
         <textarea id="wishInput" class="modal-textarea" placeholder="Escribe tu secreto aquí..."></textarea>
         <input type="password" id="pinInput" class="modal-input" maxlength="4" placeholder="PIN de 4 dígitos">
       `;
@@ -953,8 +992,8 @@
         return;
       }
 
-      localStorage.setItem(owner === 'my' ? 'my_wish' : 'her_wish', wishText);
-      localStorage.setItem(owner === 'my' ? 'my_pin' : 'her_pin', pinText);
+      localStorage.setItem(owner === 'estherlyn' ? 'wish_estherlyn' : 'wish_emmanuel', wishText);
+      localStorage.setItem(owner === 'estherlyn' ? 'pin_estherlyn' : 'pin_emmanuel', pinText);
 
       confetti({ particleCount: 60, spread: 70, origin: { y: 0.6 } });
 
@@ -965,10 +1004,10 @@
     }
 
     function promptUnlockWish(owner) {
-      const nameLabel = owner === 'my' ? 'Tu Cápsula' : 'Cápsula de Ella';
-      document.getElementById("modalTitle").innerText = `🔓 Desbloquear ${nameLabel}`;
+      const nameLabel = owner === 'estherlyn' ? 'Estherlyn Iliandra' : 'Emmanuel Rodriguez';
+      document.getElementById("modalTitle").innerText = `🔓 Desbloquear Cápsula`;
       document.getElementById("modalContentContainer").innerHTML = `
-        <p>Ingresa el PIN secreto para leer el contenido:</p>
+        <p>Ingresa el PIN secreto de ${nameLabel} para leer el contenido:</p>
         <input type="password" id="pinUnlockInput" class="modal-input" maxlength="4" placeholder="Ingresa el PIN">
       `;
       document.getElementById("modalPrimaryBtn").innerText = "Ver Secreto 🔑";
@@ -977,10 +1016,10 @@
 
     function verifyAndReadWish(owner) {
       const enteredPin = document.getElementById("pinUnlockInput").value.trim();
-      const savedPin = localStorage.getItem(owner === 'my' ? 'my_pin' : 'her_pin');
+      const savedPin = localStorage.getItem(owner === 'estherlyn' ? 'pin_estherlyn' : 'pin_emmanuel');
 
       if (enteredPin === savedPin) {
-        const wish = localStorage.getItem(owner === 'my' ? 'my_wish' : 'her_wish');
+        const wish = localStorage.getItem(owner === 'estherlyn' ? 'wish_estherlyn' : 'wish_emmanuel');
         document.getElementById("modalTitle").innerText = "💛 Contenido Secreto 💛";
         document.getElementById("modalContentContainer").innerHTML = `<p style="font-size: 1.1rem; color: #fef08a; font-style: italic;">"${wish}"</p>`;
         document.getElementById("modalPrimaryBtn").innerText = "Cerrar";
@@ -1039,7 +1078,6 @@
     const bgCtx = bgCanvas.getContext("2d");
     let particles = [];
     let petals = [];
-    let sparkTrail = [];
 
     function resizeBg() {
       bgCanvas.width = window.innerWidth;
@@ -1047,19 +1085,6 @@
     }
     window.addEventListener("resize", resizeBg);
     resizeBg();
-
-    window.addEventListener("mousemove", (e) => {
-      for (let i = 0; i < 2; i++) {
-        sparkTrail.push({
-          x: e.clientX,
-          y: e.clientY,
-          size: Math.random() * 3 + 1,
-          speedX: (Math.random() - 0.5) * 1.5,
-          speedY: (Math.random() - 0.5) * 1.5,
-          alpha: 1
-        });
-      }
-    });
 
     class Particle {
       constructor() { this.reset(); }
@@ -1213,6 +1238,7 @@
 
     const treeCanvas = document.getElementById("tree-canvas");
     const ctx = treeCanvas.getContext("2d");
+    const startContainer = document.getElementById("startContainer");
     const startBtn = document.getElementById("startBtn");
     const cardsPanel = document.getElementById("cardsPanel");
     const musicContainer = document.getElementById("musicContainer");
@@ -1348,11 +1374,10 @@
     }
 
     startBtn.addEventListener("click", () => {
-      startBtn.style.display = "none";
+      startContainer.style.display = "none";
       topBanner.classList.add("visible");
       musicContainer.style.display = "flex";
 
-      // Iniciar reproduciendo la primera canción de la lista juntos
       playSong('juntos', 0);
 
       const centerX = 240;
