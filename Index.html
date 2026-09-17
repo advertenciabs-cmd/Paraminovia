@@ -1,0 +1,707 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Un Detalle Especial ✨</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Montserrat:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        background: radial-gradient(circle at center, #1b2735 0%, #08090d 100%);
+        font-family: "Montserrat", sans-serif;
+        min-height: 100vh;
+        overflow-x: hidden;
+        color: #fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px 0;
+      }
+
+      #bg-canvas {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        pointer-events: none;
+      }
+
+      .main-container {
+        position: relative;
+        z-index: 10;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        width: 95%;
+        max-width: 1100px;
+        gap: 35px;
+      }
+
+      .canvas-box {
+        position: relative;
+        width: 450px;
+        height: 500px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-shrink: 0;
+      }
+
+      #tree-canvas {
+        width: 100%;
+        height: 100%;
+        filter: drop-shadow(0 0 15px rgba(251, 191, 36, 0.15));
+      }
+
+      .interactive-panel {
+        flex: 1;
+        max-width: 500px;
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+        align-items: center;
+        opacity: 0;
+        transform: translateY(25px);
+        pointer-events: none;
+        transition:
+          opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1),
+          transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .interactive-panel.visible {
+        opacity: 1;
+        transform: translateY(0);
+        pointer-events: auto;
+      }
+
+      .counter-badge {
+        background: rgba(15, 23, 42, 0.75);
+        border: 1px solid rgba(251, 191, 36, 0.35);
+        padding: 10px 22px;
+        border-radius: 30px;
+        font-size: 0.92rem;
+        font-weight: 500;
+        color: #fbbf24;
+        backdrop-filter: blur(12px);
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+        text-align: center;
+        letter-spacing: 0.5px;
+      }
+
+      .cards-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 14px;
+        width: 100%;
+      }
+
+      .card-item {
+        background: rgba(15, 23, 42, 0.7);
+        border: 1px solid rgba(251, 191, 36, 0.25);
+        border-radius: 18px;
+        padding: 22px 12px;
+        text-align: center;
+        cursor: pointer;
+        backdrop-filter: blur(12px);
+        transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .card-item::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          135deg,
+          rgba(251, 191, 36, 0.12),
+          transparent
+        );
+        opacity: 0;
+        transition: opacity 0.3s ease;
+      }
+
+      .card-item:hover:not(.opened) {
+        transform: translateY(-5px) scale(1.02);
+        border-color: #fbbf24;
+        box-shadow: 0 10px 25px rgba(251, 191, 36, 0.3);
+      }
+
+      .card-item:hover::before {
+        opacity: 1;
+      }
+
+      .card-item.opened {
+        background: rgba(251, 191, 36, 0.12);
+        border-color: rgba(251, 191, 36, 0.7);
+        box-shadow: 0 4px 15px rgba(251, 191, 36, 0.15);
+      }
+
+      .card-icon {
+        font-size: 1.8rem;
+        transition: transform 0.3s ease;
+      }
+
+      .card-item:hover .card-icon {
+        transform: scale(1.15);
+      }
+
+      .card-title {
+        font-size: 0.82rem;
+        font-weight: 600;
+        color: #e2e8f0;
+        letter-spacing: 0.5px;
+      }
+
+      .secret-letter-btn {
+        width: 100%;
+        padding: 18px;
+        background: linear-gradient(135deg, #f59e0b, #fbbf24, #d97706);
+        background-size: 200% 200%;
+        color: #1e1b4b;
+        border: none;
+        border-radius: 20px;
+        font-size: 1.05rem;
+        font-weight: 700;
+        cursor: pointer;
+        box-shadow: 0 0 30px rgba(251, 191, 36, 0.5);
+        transition: all 0.4s ease;
+        display: none;
+        animation:
+          pulseGlow 2s infinite,
+          gradientMove 4s ease infinite;
+      }
+
+      .secret-letter-btn.visible {
+        display: block;
+      }
+
+      @keyframes pulseGlow {
+        0% {
+          transform: scale(1);
+          box-shadow: 0 0 20px rgba(251, 191, 36, 0.4);
+        }
+        50% {
+          transform: scale(1.03);
+          box-shadow: 0 0 40px rgba(251, 191, 36, 0.8);
+        }
+        100% {
+          transform: scale(1);
+          box-shadow: 0 0 20px rgba(251, 191, 36, 0.4);
+        }
+      }
+
+      @keyframes gradientMove {
+        0% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+        100% {
+          background-position: 0% 50%;
+        }
+      }
+
+      .modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(5, 7, 13, 0.82);
+        backdrop-filter: blur(10px);
+        z-index: 100;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.4s ease;
+      }
+
+      .modal-overlay.active {
+        opacity: 1;
+        pointer-events: auto;
+      }
+
+      .modal-card {
+        background: rgba(15, 23, 42, 0.92);
+        border: 1.5px solid rgba(251, 191, 36, 0.5);
+        padding: 35px 30px;
+        border-radius: 24px;
+        max-width: 460px;
+        width: 90%;
+        box-shadow:
+          0 25px 50px rgba(0, 0, 0, 0.9),
+          0 0 30px rgba(251, 191, 36, 0.2);
+        text-align: center;
+        transform: scale(0.85) translateY(20px);
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+
+      .modal-overlay.active .modal-card {
+        transform: scale(1) translateY(0);
+      }
+
+      .modal-card h2 {
+        font-family: "Caveat", cursive;
+        font-size: 2.6rem;
+        color: #fbbf24;
+        margin-bottom: 14px;
+        text-shadow: 0 0 12px rgba(251, 191, 36, 0.4);
+      }
+
+      .modal-card p {
+        font-size: 0.98rem;
+        line-height: 1.8;
+        color: #f1f5f9;
+        white-space: pre-line;
+        margin-bottom: 24px;
+      }
+
+      .close-btn {
+        padding: 12px 30px;
+        background: linear-gradient(135deg, #fbbf24, #d97706);
+        color: #0f172a;
+        border: none;
+        border-radius: 30px;
+        font-weight: 700;
+        font-size: 0.95rem;
+        cursor: pointer;
+        box-shadow: 0 4px 15px rgba(251, 191, 36, 0.4);
+        transition: all 0.25s ease;
+      }
+
+      .close-btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 6px 20px rgba(251, 191, 36, 0.6);
+      }
+
+      .start-btn {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        padding: 18px 38px;
+        background: linear-gradient(135deg, #fbbf24, #d97706);
+        color: #1e1b4b;
+        border: none;
+        border-radius: 50px;
+        font-size: 1.15rem;
+        font-weight: 700;
+        letter-spacing: 0.5px;
+        cursor: pointer;
+        box-shadow: 0 0 35px rgba(251, 191, 36, 0.6);
+        transition: all 0.3s ease;
+        z-index: 20;
+      }
+
+      .start-btn:hover {
+        transform: translate(-50%, -50%) scale(1.08);
+        box-shadow: 0 0 50px rgba(251, 191, 36, 0.9);
+      }
+
+      .audio-control {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 30;
+        background: rgba(15, 23, 42, 0.85);
+        border: 1px solid rgba(251, 191, 36, 0.4);
+        padding: 10px 18px;
+        border-radius: 30px;
+        font-size: 0.85rem;
+        color: #fbbf24;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        transition: all 0.3s ease;
+      }
+
+      .audio-control:hover {
+        transform: scale(1.05);
+        border-color: #fbbf24;
+      }
+
+      @media (max-width: 850px) {
+        .main-container {
+          flex-direction: column-reverse;
+        }
+        .canvas-box {
+          width: 330px;
+          height: 380px;
+        }
+        .cards-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="bg-canvas"></canvas>
+
+    <div class="main-container">
+      <div class="interactive-panel" id="cardsPanel">
+        <div class="counter-badge" id="counterBadge">
+          Abre las 6 cartas para desbloquear el secreto ✨ (0/6)
+        </div>
+
+        <div class="cards-grid">
+          <div class="card-item" onclick="openCard(0)">
+            <span class="card-icon" id="icon-0">💌</span>
+            <span class="card-title">Carta 1</span>
+          </div>
+          <div class="card-item" onclick="openCard(1)">
+            <span class="card-icon" id="icon-1">🌻</span>
+            <span class="card-title">Carta 2</span>
+          </div>
+          <div class="card-item" onclick="openCard(2)">
+            <span class="card-icon" id="icon-2">✨</span>
+            <span class="card-title">Carta 3</span>
+          </div>
+          <div class="card-item" onclick="openCard(3)">
+            <span class="card-icon" id="icon-3">☀️</span>
+            <span class="card-title">Carta 4</span>
+          </div>
+          <div class="card-item" onclick="openCard(4)">
+            <span class="card-icon" id="icon-4">💛</span>
+            <span class="card-title">Carta 5</span>
+          </div>
+          <div class="card-item" onclick="openCard(5)">
+            <span class="card-icon" id="icon-5">📜</span>
+            <span class="card-title">Carta 6</span>
+          </div>
+        </div>
+
+        <button
+          class="secret-letter-btn"
+          id="secretBtn"
+          onclick="openSecretLetter()"
+        >
+          ✨ Abrir Carta Secreta Final ✨
+        </button>
+      </div>
+
+      <div class="canvas-box">
+        <button class="start-btn" id="startBtn">Toca para Iniciar 🌻</button>
+        <canvas id="tree-canvas" width="450" height="500"></canvas>
+      </div>
+    </div>
+
+    <div class="modal-overlay" id="modalOverlay">
+      <div class="modal-card">
+        <h2 id="modalTitle">Mensaje Especial</h2>
+        <p id="modalBody"></p>
+        <button class="close-btn" onclick="closeModal()">Cerrar</button>
+      </div>
+    </div>
+
+    <button class="audio-control" id="audioBtn" style="display: none">
+      🎵 Música: Activada
+    </button>
+
+    <!-- Elemento Audio para reproducción fluida -->
+    <audio id="bg-music" loop preload="auto">
+      <source
+        src="https://ia801602.us.archive.org/29/items/sia-snowman/Sia%20-%20Snowman.mp3"
+        type="audio/mpeg"
+      />
+      Tu navegador no soporta el elemento de audio.
+    </audio>
+
+    <script>
+      // --- 1. FONDO DE LUCIÉRNAGAS ---
+      const bgCanvas = document.getElementById("bg-canvas");
+      const bgCtx = bgCanvas.getContext("2d");
+      let particles = [];
+
+      function resizeBg() {
+        bgCanvas.width = window.innerWidth;
+        bgCanvas.height = window.innerHeight;
+      }
+      window.addEventListener("resize", resizeBg);
+      resizeBg();
+
+      class Particle {
+        constructor() {
+          this.reset();
+        }
+        reset() {
+          this.x = Math.random() * bgCanvas.width;
+          this.y = Math.random() * bgCanvas.height;
+          this.size = Math.random() * 2.2 + 0.6;
+          this.speedX = (Math.random() - 0.5) * 0.3;
+          this.speedY = (Math.random() - 0.5) * 0.3;
+          this.alpha = Math.random() * 0.6 + 0.2;
+        }
+        update() {
+          this.x += this.speedX;
+          this.y += this.speedY;
+          if (
+            this.x < 0 ||
+            this.x > bgCanvas.width ||
+            this.y < 0 ||
+            this.y > bgCanvas.height
+          )
+            this.reset();
+        }
+        draw() {
+          bgCtx.save();
+          bgCtx.globalAlpha = this.alpha;
+          bgCtx.fillStyle = "#fbbf24";
+          bgCtx.shadowBlur = 8;
+          bgCtx.shadowColor = "#fbbf24";
+          bgCtx.beginPath();
+          bgCtx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+          bgCtx.fill();
+          bgCtx.restore();
+        }
+      }
+
+      for (let i = 0; i < 70; i++) particles.push(new Particle());
+      function animateBg() {
+        bgCtx.clearRect(0, 0, bgCanvas.width, bgCanvas.height);
+        particles.forEach((p) => {
+          p.update();
+          p.draw();
+        });
+        requestAnimationFrame(animateBg);
+      }
+      animateBg();
+
+      // --- 2. CONTENIDO DE LAS CARTAS ---
+      const cardMessages = [
+        {
+          title: "Detalle Único",
+          text: "Cada pequeño detalle cuenta cuando se trata de hacer sonreír a alguien especial.",
+        },
+        {
+          title: "Luz Amarilla",
+          text: "Los girasoles siempre buscan la luz del sol; tú traes esa misma calidez a mi vida.",
+        },
+        {
+          title: "Construcción",
+          text: "Las cosas más bellas no se compran, se construyen con tiempo, dedicación y cariño.",
+        },
+        {
+          title: "Un Día Especial",
+          text: "Hoy es un día para recordar lo valioso que es compartir momentos llenos de luz.",
+        },
+        {
+          title: "Agradecimiento",
+          text: "Gracias por estar presente y por iluminar cada día con tu esencia.",
+        },
+        {
+          title: "El Último Paso",
+          text: "Has abierto todas las cartas. Ahora estás lista para leer el verdadero mensaje...",
+        },
+      ];
+
+      const secretMessage = {
+        title: "Para Ti ✨",
+        text: "Las flores de un jardín terminan por marchitarse, pero las que se construyen con tiempo, dedicación y código duran para siempre.\n\nGracias por iluminar cada uno de mis días.\n\n¡Feliz Día de las Flores Amarillas! 🌻",
+      };
+
+      let openedCount = 0;
+      const openedState = new Array(6).fill(false);
+
+      function openCard(index) {
+        if (!openedState[index]) {
+          openedState[index] = true;
+          openedCount++;
+          const cardElem = document.querySelectorAll(".card-item")[index];
+          cardElem.classList.add("opened");
+          document.getElementById(`icon-${index}`).innerText = "💛";
+          updateCounter();
+        }
+        showModal(cardMessages[index].title, cardMessages[index].text);
+      }
+
+      function updateCounter() {
+        const badge = document.getElementById("counterBadge");
+        badge.innerText = `Abre las 6 cartas para desbloquear el secreto ✨ (${openedCount}/6)`;
+
+        if (openedCount === 6) {
+          badge.innerText = "¡Has desbloqueado el secreto final! ✨";
+          document.getElementById("secretBtn").classList.add("visible");
+        }
+      }
+
+      function openSecretLetter() {
+        showModal(secretMessage.title, secretMessage.text);
+      }
+
+      function showModal(title, text) {
+        document.getElementById("modalTitle").innerText = title;
+        document.getElementById("modalBody").innerText = text;
+        document.getElementById("modalOverlay").classList.add("active");
+      }
+
+      function closeModal() {
+        document.getElementById("modalOverlay").classList.remove("active");
+      }
+
+      // --- 3. DIBUJO DEL ÁRBOL EN CANVAS ---
+      const treeCanvas = document.getElementById("tree-canvas");
+      const ctx = treeCanvas.getContext("2d");
+      const startBtn = document.getElementById("startBtn");
+      const cardsPanel = document.getElementById("cardsPanel");
+      const audioBtn = document.getElementById("audioBtn");
+      const bgMusic = document.getElementById("bg-music");
+      let flowerTargets = [];
+
+      function getHeartPoint(t) {
+        const x = 16 * Math.pow(Math.sin(t), 3);
+        const y = -(
+          13 * Math.cos(t) -
+          5 * Math.cos(2 * t) -
+          2 * Math.cos(3 * t) -
+          Math.cos(4 * t)
+        );
+        return { x: x * 9.5, y: y * 9.5 };
+      }
+
+      function drawSunflower(x, y, size) {
+        ctx.save();
+        ctx.translate(x, y);
+        const petalCount = 10;
+        for (let i = 0; i < petalCount; i++) {
+          ctx.beginPath();
+          ctx.rotate((Math.PI * 2) / petalCount);
+          let grad = ctx.createLinearGradient(0, 0, 0, size);
+          grad.addColorStop(0, "#f59e0b");
+          grad.addColorStop(1, "#fbbf24");
+          ctx.fillStyle = grad;
+          ctx.ellipse(0, size * 0.7, size / 3.5, size * 0.7, 0, 0, Math.PI * 2);
+          ctx.fill();
+        }
+        ctx.beginPath();
+        ctx.arc(0, 0, size * 0.45, 0, Math.PI * 2);
+        ctx.fillStyle = "#451a03";
+        ctx.fill();
+        ctx.restore();
+      }
+
+      function drawTreeStructure(callback) {
+        ctx.fillStyle = "#1e3a1e";
+        ctx.strokeStyle = "#142814";
+        ctx.lineWidth = 3;
+
+        ctx.beginPath();
+        ctx.moveTo(215, 480);
+        ctx.quadraticCurveTo(220, 360, 225, 250);
+        ctx.lineTo(235, 250);
+        ctx.quadraticCurveTo(230, 360, 245, 480);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+
+        const branches = [
+          { sx: 227, sy: 340, ex: 150, ey: 240, w: 6 },
+          { sx: 230, sy: 310, ex: 300, ey: 230, w: 6 },
+          { sx: 228, sy: 270, ex: 180, ey: 180, w: 4 },
+          { sx: 229, sy: 260, ex: 270, ey: 170, w: 4 },
+        ];
+
+        let bIndex = 0;
+        function drawNextBranch() {
+          if (bIndex < branches.length) {
+            const b = branches[bIndex];
+            ctx.beginPath();
+            ctx.strokeStyle = "#1e3a1e";
+            ctx.lineWidth = b.w;
+            ctx.lineCap = "round";
+            ctx.moveTo(b.sx, b.sy);
+            ctx.lineTo(b.ex, b.ey);
+            ctx.stroke();
+            bIndex++;
+            setTimeout(drawNextBranch, 120);
+          } else if (callback) {
+            callback();
+          }
+        }
+        drawNextBranch();
+      }
+
+      function growFlowers() {
+        let i = 0;
+        function step() {
+          if (i < flowerTargets.length) {
+            const f = flowerTargets[i];
+            drawSunflower(f.x, f.y, f.size);
+            i++;
+            requestAnimationFrame(step);
+          } else {
+            cardsPanel.classList.add("visible");
+          }
+        }
+        step();
+      }
+
+      // --- INICIAR Y REPRODUCIR MÚSICA ---
+      startBtn.addEventListener("click", () => {
+        startBtn.style.display = "none";
+
+        // Reproduce el audio inmediatamente al hacer clic
+        bgMusic.play().catch((err) => {
+          console.log("Error al reproducir audio:", err);
+        });
+
+        audioBtn.style.display = "flex";
+
+        const centerX = 225;
+        const centerY = 180;
+        for (let i = 0; i < 220; i++) {
+          const t = Math.random() * Math.PI * 2;
+          const pt = getHeartPoint(t);
+          const r = Math.sqrt(Math.random());
+          flowerTargets.push({
+            x: centerX + pt.x * r,
+            y: centerY + pt.y * r,
+            size: Math.random() * 3 + 4,
+          });
+        }
+
+        flowerTargets.sort((a, b) => b.y - a.y);
+        drawTreeStructure(() => growFlowers());
+      });
+
+      // Control de pausa / reproducción
+      let isPlaying = true;
+      audioBtn.addEventListener("click", () => {
+        if (isPlaying) {
+          bgMusic.pause();
+          audioBtn.innerText = "🔇 Música: Pausada";
+          isPlaying = false;
+        } else {
+          bgMusic.play();
+          audioBtn.innerText = "🎵 Música: Activada";
+          isPlaying = true;
+        }
+      });
+    </script>
+  </body>
+</html>
