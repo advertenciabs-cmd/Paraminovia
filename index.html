@@ -362,7 +362,6 @@
       margin-bottom: 20px;
     }
 
-    /* Estilos para inputs dentro del modal */
     .modal-textarea {
       width: 100%;
       height: 90px;
@@ -535,7 +534,7 @@
     @media (max-width: 850px) {
       .main-container { flex-direction: column-reverse; }
       .canvas-box { width: 340px; height: 390px; }
-      .cards-grid { grid-template-columns: repeat(2, 1fr); }
+      .cards-grid {grid-template-columns: repeat(2, 1fr); }
       .top-banner { display: none; }
       .countdown-widget { top: 12px; right: 50%; transform: translateX(50%); width: 90%; max-width: 340px; }
       .time-block { min-width: 40px; padding: 4px 6px; }
@@ -577,8 +576,8 @@
     </div>
   </div>
 
-  <button class="wish-btn" onclick="openWishMenu()">
-    ✨ Cápsula de Deseos
+  <button class="wish-btn" onclick="openCapsulesMenu()">
+    ✨ Cápsulas Secretas
   </button>
 
   <div class="main-container">
@@ -651,24 +650,21 @@
     const whatsappNumber = "18090000000"; 
     const whatsappMessage = encodeURIComponent("¡Me encantó tu detalle de las flores amarillas! 🌻💛 Te amo mucho.");
 
-    // --- CÁPSULA DE DESEOS CON PIN ---
-    function openWishMenu() {
-      const savedWish = localStorage.getItem("user_secret_wish");
+    // --- CÁPSULAS GEMELAS (TÚ Y ELLA) ---
+    function openCapsulesMenu() {
+      document.getElementById("modalTitle").innerText = "✨ Cápsulas Secretas ✨";
       
-      document.getElementById("modalTitle").innerText = "✨ Cápsula de Deseos ✨";
-      
-      let htmlContent = `<p>Guarda un deseo secreto protegido con tu propio PIN para que nadie más pueda verlo.</p>`;
-      
-      if (savedWish) {
-        htmlContent += `
-          <button class="action-btn" style="margin-bottom:10px;" onclick="showWriteWishForm()">📝 Escribir / Cambiar Deseo</button>
-          <button class="secondary-btn" onclick="showReadWishForm()">🔓 Abrir mi Deseo Guardado</button>
-        `;
-      } else {
-        htmlContent += `
-          <button class="action-btn" onclick="showWriteWishForm()">📝 Escribir mi Deseo</button>
-        `;
-      }
+      const hasMyWish = localStorage.getItem("my_wish");
+      const hasHerWish = localStorage.getItem("her_wish");
+
+      let myStatus = hasMyWish ? "🔒 (Guardado)" : "📝 (Vacío)";
+      let herStatus = hasHerWish ? "🔒 (Guardado)" : "📝 (Vacío)";
+
+      let htmlContent = `
+        <p>Elijan su espacio secreto. Cada cápsula está protegida por un PIN individual.</p>
+        <button class="action-btn" style="margin-bottom:10px;" onclick="openCapsuleOwner('my')">👤 Tu Cápsula ${myStatus}</button>
+        <button class="secondary-btn" onclick="openCapsuleOwner('her')">💛 Cápsula de Ella ${herStatus}</button>
+      `;
 
       document.getElementById("modalContentContainer").innerHTML = htmlContent;
       document.getElementById("whatsappBtn").style.display = "none";
@@ -677,59 +673,84 @@
       document.getElementById("modalOverlay").classList.add("active");
     }
 
-    function showWriteWishForm() {
-      document.getElementById("modalTitle").innerText = "📝 Escribe tu Deseo";
-      document.getElementById("modalContentContainer").innerHTML = `
-        <p>Escribe lo que deseas con el corazón y crea un PIN de 4 dígitos:</p>
-        <textarea id="wishInput" class="modal-textarea" placeholder="Escribe tu deseo aquí..."></textarea>
-        <input type="password" id="pinInput" class="modal-input" maxlength="4" placeholder="Crea tu PIN (ej: 1234)">
-      `;
-      document.getElementById("modalPrimaryBtn").innerText = "Guardar Deseo 🔒";
-      document.getElementById("modalPrimaryBtn").onclick = saveWish;
+    function openCapsuleOwner(owner) {
+      const wishKey = owner === 'my' ? 'my_wish' : 'her_wish';
+      const nameLabel = owner === 'my' ? 'Tu Cápsula' : 'Cápsula de Ella';
+      const hasWish = localStorage.getItem(wishKey);
+
+      document.getElementById("modalTitle").innerText = `✨ ${nameLabel} ✨`;
+
+      if (hasWish) {
+        document.getElementById("modalContentContainer").innerHTML = `
+          <p>Esta cápsula ya tiene un secreto guardado. Necesitas ingresar el PIN correspondiente para abrirla o puedes modificarla.</p>
+          <button class="action-btn" style="margin-bottom:10px;" onclick="promptUnlockWish('${owner}')">🔓 Abrir con PIN</button>
+          <button class="secondary-btn" onclick="promptWriteWish('${owner}')">✏️ Cambiar Deseo</button>
+        `;
+      } else {
+        document.getElementById("modalContentContainer").innerHTML = `
+          <p>No hay ningún secreto guardado aquí todavía.</p>
+          <button class="action-btn" onclick="promptWriteWish('${owner}')">✍️ Escribir Deseo</button>
+        `;
+      }
+      document.getElementById("modalPrimaryBtn").innerText = "Regresar";
+      document.getElementById("modalPrimaryBtn").onclick = openCapsulesMenu;
     }
 
-    function saveWish() {
+    function promptWriteWish(owner) {
+      const nameLabel = owner === 'my' ? 'Tu Deseo' : 'Deseo de Ella';
+      document.getElementById("modalTitle").innerText = `✍️ Escribir ${nameLabel}`;
+      document.getElementById("modalContentContainer").innerHTML = `
+        <p>Escribe el mensaje secreto y crea un PIN de 4 dígitos:</p>
+        <textarea id="wishInput" class="modal-textarea" placeholder="Escribe tu secreto aquí..."></textarea>
+        <input type="password" id="pinInput" class="modal-input" maxlength="4" placeholder="PIN de 4 dígitos">
+      `;
+      document.getElementById("modalPrimaryBtn").innerText = "Guardar 🔒";
+      document.getElementById("modalPrimaryBtn").onclick = () => saveWishData(owner);
+    }
+
+    function saveWishData(owner) {
       const wishText = document.getElementById("wishInput").value.trim();
       const pinText = document.getElementById("pinInput").value.trim();
 
       if (!wishText || pinText.length < 4) {
-        alert("Por favor escribe un deseo y un PIN válido de 4 dígitos.");
+        alert("Por favor escribe un mensaje y un PIN válido de 4 dígitos.");
         return;
       }
 
-      localStorage.setItem("user_secret_wish", wishText);
-      localStorage.setItem("user_secret_pin", pinText);
+      localStorage.setItem(owner === 'my' ? 'my_wish' : 'her_wish', wishText);
+      localStorage.setItem(owner === 'my' ? 'my_pin' : 'her_pin', pinText);
 
       confetti({ particleCount: 60, spread: 70, origin: { y: 0.6 } });
-      
+
       document.getElementById("modalTitle").innerText = "✨ ¡Guardado con Éxito! ✨";
-      document.getElementById("modalContentContainer").innerHTML = `<p>Tu deseo ha sido guardado de forma segura en este dispositivo. Nadie podrá verlo sin tu PIN.</p>`;
-      document.getElementById("modalPrimaryBtn").innerText = "Entendido";
+      document.getElementById("modalContentContainer").innerHTML = `<p>Tu secreto está seguro bajo llave digital.</p>`;
+      document.getElementById("modalPrimaryBtn").innerText = "Cerrar";
       document.getElementById("modalPrimaryBtn").onclick = closeModal;
     }
 
-    function showReadWishForm() {
-      document.getElementById("modalTitle").innerText = "🔓 Desbloquear Deseo";
+    function promptUnlockWish(owner) {
+      const nameLabel = owner === 'my' ? 'Tu Cápsula' : 'Cápsula de Ella';
+      document.getElementById("modalTitle").innerText = `🔓 Desbloquear ${nameLabel}`;
       document.getElementById("modalContentContainer").innerHTML = `
-        <p>Ingresa tu PIN secreto para leer tu deseo:</p>
-        <input type="password" id="pinUnlockInput" class="modal-input" maxlength="4" placeholder="Ingresa tu PIN">
+        <p>Ingresa el PIN secreto para leer el contenido:</p>
+        <input type="password" id="pinUnlockInput" class="modal-input" maxlength="4" placeholder="Ingresa el PIN">
       `;
-      document.getElementById("modalPrimaryBtn").innerText = "Abrir Candado 🔑";
-      document.getElementById("modalPrimaryBtn").onclick = verifyPinAndReadWish;
+      document.getElementById("modalPrimaryBtn").innerText = "Ver Secreto 🔑";
+      document.getElementById("modalPrimaryBtn").onclick = () => verifyAndReadWish(owner);
     }
 
-    function verifyPinAndReadWish() {
+    function verifyAndReadWish(owner) {
       const enteredPin = document.getElementById("pinUnlockInput").value.trim();
-      const savedPin = localStorage.getItem("user_secret_pin");
+      const savedPin = localStorage.getItem(owner === 'my' ? 'my_pin' : 'her_pin');
 
       if (enteredPin === savedPin) {
-        const wish = localStorage.getItem("user_secret_wish");
-        document.getElementById("modalTitle").innerText = "💛 Tu Deseo Secreto 💛";
+        const wish = localStorage.getItem(owner === 'my' ? 'my_wish' : 'her_wish');
+        document.getElementById("modalTitle").innerText = "💛 Contenido Secreto 💛";
         document.getElementById("modalContentContainer").innerHTML = `<p style="font-size: 1.1rem; color: #fef08a; font-style: italic;">"${wish}"</p>`;
         document.getElementById("modalPrimaryBtn").innerText = "Cerrar";
         document.getElementById("modalPrimaryBtn").onclick = closeModal;
       } else {
-        alert("PIN incorrecto. Inténtalo de nuevo.");
+        alert("PIN incorrecto. No puedes ver este secreto.");
       }
     }
 
