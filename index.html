@@ -34,11 +34,12 @@
       pointer-events: none;
     }
 
-    /* Frases dinámicas en la parte superior */
+    /* Frases dinámicas en la parte superior central */
     .top-banner {
       position: fixed;
-      top: 15px;
-      width: 100%;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
       text-align: center;
       z-index: 20;
       font-family: 'Dancing Script', cursive;
@@ -48,10 +49,42 @@
       opacity: 0;
       transition: opacity 1s ease-in-out;
       pointer-events: none;
+      white-space: nowrap;
     }
 
     .top-banner.visible {
       opacity: 1;
+    }
+
+    /* Cuenta regresiva en la esquina superior derecha */
+    .countdown-widget {
+      position: fixed;
+      top: 18px;
+      right: 20px;
+      z-index: 25;
+      background: rgba(17, 24, 39, 0.75);
+      border: 1px solid rgba(251, 191, 36, 0.4);
+      padding: 8px 16px;
+      border-radius: 20px;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+      text-align: center;
+    }
+
+    .countdown-title {
+      font-size: 0.72rem;
+      color: #fbbf24;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 2px;
+    }
+
+    .countdown-timer {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #fef08a;
+      letter-spacing: 0.5px;
     }
 
     .main-container {
@@ -380,6 +413,9 @@
       .main-container { flex-direction: column-reverse; }
       .canvas-box { width: 340px; height: 390px; }
       .cards-grid { grid-template-columns: repeat(2, 1fr); }
+      .top-banner { display: none; }
+      .countdown-widget { top: 12px; right: 12px; padding: 6px 12px; }
+      .countdown-timer { font-size: 0.78rem; }
     }
   </style>
 </head>
@@ -388,6 +424,11 @@
   <canvas id="bg-canvas"></canvas>
 
   <div class="top-banner" id="topBanner">✨ Un detalle hecho con el corazón ✨</div>
+
+  <div class="countdown-widget">
+    <div class="countdown-title">💍 Aniversario (22 Ene)</div>
+    <div class="countdown-timer" id="countdownTimer">Cargando...</div>
+  </div>
 
   <div class="main-container">
     <div class="interactive-panel" id="cardsPanel">
@@ -458,7 +499,30 @@
     const whatsappNumber = "18090000000"; 
     const whatsappMessage = encodeURIComponent("¡Me encantó tu detalle de las flores amarillas! 🌻💛 Te amo mucho.");
 
-    // --- 1. FRASES DINÁMICAS ---
+    // --- 1. LÓGICA DE LA CUENTA REGRESIVA AL 22 DE ENERO ---
+    function updateCountdown() {
+      const now = new Date();
+      let targetYear = now.getFullYear();
+      
+      // Si ya pasó el 22 de enero de este año, apunta al 22 de enero del próximo año
+      let anniversaryDate = new Date(targetYear, 0, 22, 0, 0, 0); // Mes 0 es Enero
+      if (now > anniversaryDate) {
+        anniversaryDate = new Date(targetYear + 1, 0, 22, 0, 0, 0);
+      }
+
+      const diff = anniversaryDate - now;
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+      document.getElementById("countdownTimer").innerText = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+    }
+    setInterval(updateCountdown, 1000);
+    updateCountdown();
+
+    // --- 2. FRASES DINÁMICAS ---
     const loveQuotes = [
       "✨ Un detalle hecho con todo el corazón ✨",
       "🌻 'Tú traes luz a cada uno de mis días' 🌻",
@@ -478,7 +542,7 @@
     }
     setInterval(rotateQuotes, 7000);
 
-    // --- 2. FONDO DE LUCIÉRNAGAS, PÉTALOS Y ESTRELLA MÁGICA CON MOUSE ---
+    // --- 3. FONDO DE LUCIÉRNAGAS, PÉTALOS Y ESTRELLA MÁGICA ---
     const bgCanvas = document.getElementById("bg-canvas");
     const bgCtx = bgCanvas.getContext("2d");
     let particles = [];
@@ -492,7 +556,6 @@
     window.addEventListener("resize", resizeBg);
     resizeBg();
 
-    // Estela de chispas al mover el mouse o tocar la pantalla
     window.addEventListener("mousemove", (e) => {
       for (let i = 0; i < 2; i++) {
         sparkTrail.push({
@@ -593,7 +656,6 @@
       particles.forEach(p => { p.update(); p.draw(); });
       petals.forEach(p => { p.update(); p.draw(); });
 
-      // Dibujar estela de estrellas
       for (let i = sparkTrail.length - 1; i >= 0; i--) {
         const s = sparkTrail[i];
         s.x += s.speedX;
@@ -618,7 +680,7 @@
     }
     animateBg();
 
-    // --- 3. CONTENIDO Y LÓGICA DE CARTAS ---
+    // --- 4. CONTENIDO Y LÓGICA DE CARTAS ---
     const cardMessages = [
       { title: "Detalle Único", text: "Cada pequeño detalle cuenta cuando se trata de hacer sonreír a alguien especial." },
       { title: "Luz Amarilla", text: "Los girasoles siempre buscan la luz del sol; tú traes esa misma calidez a mi vida." },
@@ -696,7 +758,7 @@
 
     function closeModal() { document.getElementById("modalOverlay").classList.remove("active"); }
 
-    // --- 4. DIBUJO REALISTA DEL ÁRBOL ---
+    // --- 5. DIBUJO REALISTA DEL ÁRBOL ---
     const treeCanvas = document.getElementById("tree-canvas");
     const ctx = treeCanvas.getContext("2d");
     const startBtn = document.getElementById("startBtn");
