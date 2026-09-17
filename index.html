@@ -1071,7 +1071,58 @@
       ctx.restore();
     }
 
+    function drawLandscape() {
+      // 1. Suelo / Colina con textura de pasto
+      let groundGrad = ctx.createLinearGradient(240, 460, 240, 520);
+      groundGrad.addColorStop(0, '#14532d');
+      groundGrad.addColorStop(0.4, '#166534');
+      groundGrad.addColorStop(1, '#052e16');
+
+      ctx.fillStyle = groundGrad;
+      ctx.beginPath();
+      ctx.ellipse(240, 510, 230, 45, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      // 2. Briznas de pasto detalladas en la base
+      ctx.strokeStyle = '#4ade80';
+      ctx.lineWidth = 1.5;
+      for (let x = 60; x < 420; x += 8) {
+        let h = Math.sin(x * 0.5) * 6 + 12;
+        let lean = (Math.random() - 0.5) * 4;
+        ctx.beginPath();
+        ctx.moveTo(x, 490);
+        ctx.quadraticCurveTo(x + lean, 490 - h * 0.6, x + lean * 2, 490 - h);
+        ctx.stroke();
+      }
+
+      // 3. Pequeños girasoles silvestres en el suelo a los lados del tronco
+      const groundFlowers = [
+        { x: 140, y: 495, size: 10 },
+        { x: 175, y: 505, size: 8 },
+        { x: 310, y: 502, size: 9 },
+        { x: 345, y: 492, size: 11 },
+        { x: 200, y: 512, size: 7 },
+        { x: 280, y: 510, size: 8 }
+      ];
+
+      groundFlowers.forEach(gf => {
+        // Tallo corto
+        ctx.strokeStyle = '#15803d';
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(gf.x, gf.y + gf.size);
+        ctx.lineTo(gf.x, gf.y);
+        ctx.stroke();
+
+        // Girasol pequeño
+        drawSunflower(gf.x, gf.y, gf.size);
+      });
+    }
+
     function drawRealisticTrunk(callback) {
+      // Dibujar primero el paisaje de fondo (pasto y flores de base)
+      drawLandscape();
+
       let grad = ctx.createLinearGradient(200, 500, 280, 200);
       grad.addColorStop(0, '#27170a');
       grad.addColorStop(0.5, '#422510');
@@ -1135,11 +1186,11 @@
 
       const centerX = 240;
       const centerY = 190;
-      // Aumentado a 380 flores con tamaños ligeramente más compactos para que el corazón se vea perfecto y denso
+      
       for (let i = 0; i < 380; i++) {
         const t = Math.random() * Math.PI * 2;
         const pt = getHeartPoint(t);
-        const r = Math.pow(Math.random(), 0.7); // Distribución más equilibrada hacia los bordes del corazón
+        const r = Math.pow(Math.random(), 0.7);
         flowerTargets.push({
           x: centerX + pt.x * r * 0.95,
           y: centerY + pt.y * r * 0.95,
