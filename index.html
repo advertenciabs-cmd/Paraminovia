@@ -930,8 +930,8 @@
       const hasEstherlyn = localStorage.getItem("wish_estherlyn");
       const hasEmmanuel = localStorage.getItem("wish_emmanuel");
 
-      let estherlynStatus = hasEstherlyn ? "🔒 (Guardado)" : "📝 (Vacío)";
-      let emmanuelStatus = hasEmmanuel ? "🔒 (Guardado)" : "📝 (Vacío)";
+      let estherlynStatus = hasEstherlyn ? "🔒 (Guardado)" : "";
+      let emmanuelStatus = hasEmmanuel ? "🔒 (Guardado)" : "";
 
       let htmlContent = `
         <p>Elijan su espacio secreto. Cada cápsula está protegida por un PIN individual.</p>
@@ -1054,10 +1054,10 @@
     updateCountdown();
 
     const loveQuotes = [
-      "✨ Un detalle hecho con todo el corazón ✨",
-      "🌻 'Tú traes luz a cada uno de mis días' 🌻",
-      "💛 Las mejores historias se construyen paso a paso 💛",
-      "✨ Gracias por iluminar mi vida ✨"
+      "Contigo hasta el final de los tiempos",
+      "🌻 'Por la gloria' 🌻",
+      "💛 Por el honor 💛",
+      "✨ Por la victoria ✨"
     ];
     let quoteIndex = 0;
     const topBanner = document.getElementById("topBanner");
@@ -1159,7 +1159,7 @@
     animateBg();
 
     const cardMessages = [
-      { title: "Detalle Único", text: "Cada pequeño detalle cuenta cuando se trata de hacer sonreír a alguien especial." },
+      { title: "Para el amor de mi vida", text: "Hola mi amor. Quería prepararte este detalle para recordarte lo mucho que significas para mí. A veces las palabras se quedan cortas para expresar todo lo que siento, pero espero que al leer cada una de estas cartas sientas lo presente que estás en mi corazón todos los días.." },
       { title: "Luz Amarilla", text: "Los girasoles siempre buscan la luz del sol; tú traes esa misma calidez a mi vida." },
       { title: "Construcción", text: "Las cosas más bellas no se compran, se construyen con tiempo, dedicación y cariño." },
       { title: "Un Día Especial", text: "Hoy es un día para recordar lo valioso que es compartir momentos llenos de luz." },
